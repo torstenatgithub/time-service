@@ -11,4 +11,8 @@ node {
     stage('unittest') {
         sh "./gradlew test"
     }
+
+    stage('upload') {
+        sh "./gradlew upload"
+    }
 }
