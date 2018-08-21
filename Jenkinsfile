@@ -12,9 +12,9 @@ node {
         sh "./gradlew test"
     }
 
-    stage('upload') {
-        sh "./gradlew upload"
-    }
+    //stage('upload') {
+    //    sh "./gradlew upload"
+    //}
 
     stage('os build') {
         script {
