@@ -1,18 +1,27 @@
-node {
+pipeline {
+    stages {
 
-    stage('git clone') {
-        git url: 'https://github.com/torstenatgithub/time-service.git'
-    }
+        stage('clone') {
+            git url: 'https://github.com/torstenatgithub/time-service.git'
+        }
 
-    stage('build') {
-        sh "./gradlew clean build -x test"
-    }
+        stage('build') {
+            sh "./gradlew clean bootJar"
+        }
 
-    stage('unittest') {
-        sh "./gradlew test"
-    }
+        stage('unittest') {
+            sh "./gradlew test"
+        }
 
-    stage('upload') {
-        sh "./gradlew upload"
+        stage('upload') {
+            sh "./gradlew upload"
+        }
+
+        stage('os build') {
+            openshift.withCluster() {
+                openshift.withProject('torstens-project') {
+                    echo "Hello from a non-default project: ${openshift.project()}"
+                }
+        }
     }
 }
