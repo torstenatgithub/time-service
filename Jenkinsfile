@@ -20,7 +20,7 @@ node {
         script {
             openshift.withCluster() {
                 openshift.withProject('torstens-project') {
-                    echo "Hello from a non-default project: ${openshift.project()}"
+                    openshift.selector("bc", "time-service").startBuild("--from-dir=build/libs", "--wait=true")
                 }
             }
         }
