@@ -22,6 +22,7 @@ pipeline {
                 openshift.withProject('torstens-project') {
                     echo "Hello from a non-default project: ${openshift.project()}"
                 }
+            }
         }
     }
 }
