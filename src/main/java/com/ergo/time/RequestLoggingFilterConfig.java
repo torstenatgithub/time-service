@@ -1,6 +1,8 @@
 package com.ergo.time;
 
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Bean;
 
 @Configuration
 public class RequestLoggingFilterConfig {
