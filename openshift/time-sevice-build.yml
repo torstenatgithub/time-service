@@ -1,20 +1,25 @@
 apiVersion: v1
 kind: BuildConfig
 metadata:
-  name: time-service-build
   labels:
-    name: time-service-build
+    app: time-service
+  name: time-service
 spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'time-service:latest'
+  postCommit: {}
+  resources: {}
   runPolicy: Serial
   source:
     type: Binary
   strategy:
-    type: Source
     sourceStrategy:
-      from: ImageStreamTag
-      namespace: openshift
-      name: redhat-openjdk18-openshift:latest
-  output:
-    to:
-      kind: ImageStreamTag
-      name: time-service:latest
+      from:
+        kind: ImageStreamTag
+        name: 'redhat-openjdk18-openshift:latest'
+        namespace: openshift
+    type: Source
+  triggers:
+    - type: ConfigChange
