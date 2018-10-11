@@ -12,7 +12,8 @@
                 "annotations": {
                     "description": "OpenJDK 8 Image for Java Applications",
                     "tags": "builder,java",
-                    "supports":"java:8"
+                    "supports":"java:8",
+                    "version":"latest"
                 }
             }
         ]
