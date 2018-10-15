@@ -5,10 +5,13 @@ metadata:
   labels:
     app: time-service
 spec:
+  selector:
+    deploymentconfig: time-service
   template:
     metadata:
       labels:
         name: time-service
+        deploymentconfig: time-service
     spec:
       containers:
         - image: >-
