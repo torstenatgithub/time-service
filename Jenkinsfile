@@ -22,8 +22,8 @@ pipeline {
               //echo sh(returnStdout: true, script: 'env')
               
               sh "echo -n `date -u +%Y%m%d%H%M%S%N` > build-utc-datetime"
-              def version = readFile 'build-utc-datetime'
-              echo "Building version: ${version}"
+              VERSION = readFile 'build-utc-datetime'
+              echo "Building version: ${VERSION}"
             }
           }
         }
@@ -88,7 +88,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject() {
-              openshift.tag("${openshift.project()}/time-service:latest", "${openshift.project()}/time-service:${version}")
+              openshift.tag("${openshift.project()}/time-service:latest", "${openshift.project()}/time-service:${VERSION}")
             }
           }
         }
