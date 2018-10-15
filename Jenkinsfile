@@ -21,8 +21,9 @@ pipeline {
              
               sh "echo -n `date -u +%Y%m%d%H%M%S%N` > build-utc-datetime"
               VERSION = readFile 'build-utc-datetime'
-              echo "Building version: ${VERSION}"
+              sh "rm build-utc-datetime"
               
+              echo "Building version: ${VERSION}"
               echo sh(returnStdout: true, script: 'env')
             }
           }
