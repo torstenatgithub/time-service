@@ -1,4 +1,6 @@
 pipeline {
+  
+  def String version
 
   agent {
     node {
@@ -15,6 +17,9 @@ pipeline {
     stage('preamble') {
       steps {
         script {
+          version = VersionNumber(versionPrefix: '', versionNumberString: '${BUILD_DATE_FORMATTED, "yyyyMMddHHmmss"}')
+          echo "Building version: ${version}"
+          
           openshift.withCluster() {
             openshift.withProject() {
               echo "Using project: ${openshift.project()}"
@@ -71,6 +76,18 @@ pipeline {
                 def rcMap = it.object()
                 return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
               }
+            }
+          }
+        }
+      }
+    }
+    
+    stage('tag image') {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject() {
+              openshift.tag("${openshift.project()}/time-service:latest", "${openshift.project()}/time-service:${version}")
             }
           }
         }
