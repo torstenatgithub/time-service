@@ -19,7 +19,7 @@ pipeline {
             openshift.withProject() {
               echo "Using project: ${openshift.project()}"
               
-              def version = VersionNumber(versionPrefix: '', versionNumberString: '${BUILD_DATE_FORMATTED, "yyyyMMddHHmmss"}')
+              def version = Calendar.getInstance().getTime().format('YYYYMMdd-hhmmss',TimeZone.getTimeZone('UTC'))
               echo "Building version: ${version}"
             }
           }
