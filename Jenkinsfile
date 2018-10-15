@@ -60,5 +60,22 @@ pipeline {
       }
     }
     
+    stage('verify deployment') {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject() {
+              def latestDeploymentVersion = openshift.selector("dc", "time-service").object().status.latestVersion
+              def rc = openshift.selector("rc", "time-service-${latestDeploymentVersion}")
+              rc.untilEach(1) {
+                def rcMap = it.object()
+                return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+              }
+            }
+          }
+        }
+      }
+    }
+    
   }
 }
