@@ -1,6 +1,7 @@
 pipeline {
   
-  def String version
+  def version = VersionNumber(versionPrefix: '', versionNumberString: '${BUILD_DATE_FORMATTED, "yyyyMMddHHmmss"}')
+  echo "Building version: ${version}"
 
   agent {
     node {
@@ -17,9 +18,6 @@ pipeline {
     stage('preamble') {
       steps {
         script {
-          version = VersionNumber(versionPrefix: '', versionNumberString: '${BUILD_DATE_FORMATTED, "yyyyMMddHHmmss"}')
-          echo "Building version: ${version}"
-          
           openshift.withCluster() {
             openshift.withProject() {
               echo "Using project: ${openshift.project()}"
