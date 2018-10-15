@@ -11,7 +11,8 @@ spec:
         name: time-service
     spec:
       containers:
-        - image: time-service-dev/time-service
+        - image: >-
+            172.30.1.1:5000/time-service-dev/time-service@sha256:1f51710eddf48c3f3925529a1a7827801dcc9be5cc84d18b81eac7ab404485ba
           name: time-service
           ports:
             - containerPort: 8080
