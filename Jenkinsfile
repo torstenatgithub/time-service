@@ -19,8 +19,9 @@ pipeline {
             openshift.withProject() {
               echo "Using project: ${openshift.project()}"
               
-              def version = Calendar.getInstance().getTime().format('YYYYMMdd-hhmmss',TimeZone.getTimeZone('UTC'))
-              echo "Building version: ${version}"
+              //def version = Calendar.getInstance().getTime().format('YYYYMMdd-hhmmss',TimeZone.getTimeZone('UTC'))
+              //echo "Building version: ${version}"
+              echo sh(returnStdout: true; script: 'env')
             }
           }
         }
