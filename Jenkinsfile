@@ -18,12 +18,12 @@ pipeline {
           openshift.withCluster() {
             openshift.withProject() {
               echo "Using project: ${openshift.project()}"
-              
-              //echo sh(returnStdout: true, script: 'env')
-              
+             
               sh "echo -n `date -u +%Y%m%d%H%M%S%N` > build-utc-datetime"
               VERSION = readFile 'build-utc-datetime'
               echo "Building version: ${VERSION}"
+              
+              echo sh(returnStdout: true, script: 'env')
             }
           }
         }
@@ -98,6 +98,8 @@ pipeline {
     stage('tag repo') {
       steps {
         script {
+          sh("git config user.name \"CI/CD pipeline\"")
+          sh("git config user.email \"cicd@no.reply\"")
           sh("git commit -am \"Version ${VERSION}\"")
           sh("git tag -am \"Tag ${VERSION}\" ${VERSION}")
           sh("git push --tags --quiet")
