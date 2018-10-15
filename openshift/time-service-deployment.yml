@@ -1,47 +1,22 @@
-apiVersion: apps.openshift.io/v1
+apiVersion: v1
 kind: DeploymentConfig
 metadata:
+  name: time-service
   labels:
     app: time-service
-  name: time-service
 spec:
-  replicas: 0
-  selector:
-    deploymentconfig: time-service
-  strategy:
-    activeDeadlineSeconds: 21600
-    resources: {}
-    rollingParams:
-      intervalSeconds: 1
-      maxSurge: 25%
-      maxUnavailable: 25%
-      timeoutSeconds: 600
-      updatePeriodSeconds: 1
-    type: Rolling
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        app: time-service
-        deploymentconfig: time-service
+        name: time-service
     spec:
       containers:
-        - image: >-
-            172.30.1.1:5000/time-service-dev/time-service@sha256:1f51710eddf48c3f3925529a1a7827801dcc9be5cc84d18b81eac7ab404485ba
-          imagePullPolicy: Always
+        - image: time-service-dev/time-service
           name: time-service
           ports:
             - containerPort: 8080
               protocol: TCP
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      terminationGracePeriodSeconds: 30
-  test: false
+  replicas: 1
   triggers:
     - imageChangeParams:
         automatic: true
@@ -50,6 +25,10 @@ spec:
         from:
           kind: ImageStreamTag
           name: 'time-service:latest'
-          namespace: time-service-dev
       type: ImageChange
     - type: ConfigChange
+  strategy:
+    type: Rolling
+  paused: false
+  revisionHistoryLimit: 2
+  minReadySeconds: 0
