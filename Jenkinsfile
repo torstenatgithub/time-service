@@ -21,7 +21,7 @@ pipeline {
               
               //def version = Calendar.getInstance().getTime().format('YYYYMMdd-hhmmss',TimeZone.getTimeZone('UTC'))
               //echo "Building version: ${version}"
-              echo sh(returnStdout: true; script: 'env')
+              echo sh(returnStdout: true, script: 'env')
             }
           }
         }
