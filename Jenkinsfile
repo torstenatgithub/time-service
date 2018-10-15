@@ -20,8 +20,10 @@ pipeline {
               echo "Using project: ${openshift.project()}"
               
               //def version = Calendar.getInstance().getTime().format('YYYYMMdd-hhmmss',TimeZone.getTimeZone('UTC'))
-              //echo "Building version: ${version}"
-              echo sh(returnStdout: true, script: 'env')
+              //echo sh(returnStdout: true, script: 'env')
+              sh "echo -n `date -u +%Y%m%d%H%M%S%N` > build-utc-datetime"
+              def version = readFile 'build-utc-datetime'
+              echo "Building version: ${version}"
             }
           }
         }
