@@ -30,7 +30,7 @@ pipeline {
       }
     }
     
-    stage('clone') {
+    stage('clone repo') {
       steps {
         script {
           git url: 'https://github.com/torstenatgithub/time-service.git'
@@ -93,6 +93,12 @@ pipeline {
           }
         }
       }
+    }
+    
+    stage('tag repo') {
+      sh("git commit -am \"Version ${VERSION}\"")
+      sh("git tag -am \"Tag ${VERSION}\" ${VERSION}")
+      sh("git push --tags --quiet")
     }
     
   }
