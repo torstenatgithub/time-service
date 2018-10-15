@@ -1,28 +1,63 @@
-node {
+pipeline {
+  agent {
+    node {
+      label 'maven'
+    }
+  }
+  
+  options {
+    timeout(time: 20, unit: 'MINUTES')
+  }
+  
+  stages {
 
+    stage('preamble') {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject() {
+              echo "Using project: ${openshift.project()}"
+            }
+          }
+        }
+      }
+    }
+    
     stage('clone') {
-        git url: 'https://github.com/torstenatgithub/time-service.git'
+      steps {
+        script {
+          git url: 'https://github.com/torstenatgithub/time-service.git'
+        }
+      }
     }
 
     stage('build') {
-        sh "./gradlew clean bootJar"
+      steps {
+        script {
+          sh "./gradlew clean bootJar"
+        }
+      }
     }
 
     stage('unittest') {
-        sh "./gradlew test"
+      steps {
+        script {
+          sh "./gradlew test"
+        }
+      }
     }
-
-    //stage('upload') {
-    //    sh "./gradlew upload"
-    //}
 
     stage('os build') {
+      steps {
         script {
-            openshift.withCluster() {
-                openshift.withProject('torstens-project') {
-                    openshift.selector("bc", "time-service").startBuild("--from-dir=build/libs", "--wait=true")
-                }
+          openshift.withCluster() {
+            openshift.withProject() {
+              openshift.selector("bc", "time-service").startBuild("--from-dir=build/libs", "--wait=true")
             }
+          }
         }
+      }
     }
+    
+  }
 }
