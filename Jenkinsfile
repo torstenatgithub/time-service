@@ -1,7 +1,9 @@
 pipeline {
   
-  def version = VersionNumber(versionPrefix: '', versionNumberString: '${BUILD_DATE_FORMATTED, "yyyyMMddHHmmss"}')
-  echo "Building version: ${version}"
+  script {
+    def version = VersionNumber(versionPrefix: '', versionNumberString: '${BUILD_DATE_FORMATTED, "yyyyMMddHHmmss"}')
+    echo "Building version: ${version}"
+  }
 
   agent {
     node {
