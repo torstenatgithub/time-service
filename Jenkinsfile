@@ -96,9 +96,13 @@ pipeline {
     }
     
     stage('tag repo') {
-      sh("git commit -am \"Version ${VERSION}\"")
-      sh("git tag -am \"Tag ${VERSION}\" ${VERSION}")
-      sh("git push --tags --quiet")
+      steps {
+        script {
+          sh("git commit -am \"Version ${VERSION}\"")
+          sh("git tag -am \"Tag ${VERSION}\" ${VERSION}")
+          sh("git push --tags --quiet")
+        }
+      }
     }
     
   }
