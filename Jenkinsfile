@@ -19,9 +19,8 @@ pipeline {
             openshift.withProject() {
               echo "Using project: ${openshift.project()}"
              
-              sh "echo -n `date -u +%Y%m%d%H%M%S%N` > build-utc-datetime"
-              VERSION = readFile 'build-utc-datetime'
-              sh "rm build-utc-datetime"
+              sh "echo -n `date -u +%Y%m%d%H%M%S%N` > build-timestamp.txt"
+              VERSION = readFile 'build-timestamp.txt'
               
               echo "Building version: ${VERSION}"
               echo sh(returnStdout: true, script: 'env')
@@ -101,6 +100,7 @@ pipeline {
         script {
           sh("git config user.name \"CI/CD pipeline\"")
           sh("git config user.email \"cicd@no.reply\"")
+          sh("git add build-timestamp.txt")
           sh("git commit -am \"Version ${VERSION}\"")
           sh("git tag -am \"Tag ${VERSION}\" ${VERSION}")
           sh("git push --tags --quiet")
