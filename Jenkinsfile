@@ -54,6 +54,18 @@ pipeline {
       }
     }
 
+    stage('update os artifacts') {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject() {
+              openshift.apply("-f", "-l=app=time-service", "--dry-run=true", "openshift")
+            }
+          }
+        }
+      }
+    }
+
     stage('os build') {
       steps {
         script {
