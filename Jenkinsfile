@@ -59,7 +59,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject() {
-              openshift.apply("-f", "-l=app=time-service", "--dry-run=true", "openshift")
+              openshift.apply("-f", "-l=app=time-service", "--dry-run=true", "./openshift")
               //openshift.apply("-f", "-l=app=time-service", "--dry-run=true", "openshift")
             }
           }
@@ -72,9 +72,6 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject() {
-              
-              openshift.apply("-f", "openshift/time-service-route.yml")
-              
               openshift.selector("bc", "time-service").startBuild("--from-dir=build/libs", "--wait=true")
             }
           }
