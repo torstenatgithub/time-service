@@ -59,6 +59,9 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject() {
+              
+              openshift.apply("-f", "openshift/time-service-route.yml")
+              
               openshift.selector("bc", "time-service").startBuild("--from-dir=build/libs", "--wait=true")
             }
           }
@@ -98,8 +101,8 @@ pipeline {
     stage('tag repo') {
       steps {
         script {
-          String lockName = "${JOB_NAME}-${BUILD_NUMBER}" as String
-          openshift.setLockName(lockName)
+          // String lockName = "${JOB_NAME}-${BUILD_NUMBER}" as String
+          // openshift.setLockName(lockName)
           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github', usernameVariable: 'githubUser', passwordVariable: 'githubPwd']]) {
             
             /* def gitUrl = sh returnStdout: true, script: 'git config remote.origin.url'
