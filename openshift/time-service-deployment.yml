@@ -25,7 +25,7 @@ spec:
     - imageChangeParams:
         automatic: true
         containerNames:
-          - test-service
+          - time-service
         from:
           kind: ImageStreamTag
           name: 'time-service:latest'
