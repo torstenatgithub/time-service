@@ -98,8 +98,8 @@ pipeline {
     stage('tag repo') {
       steps {
         script {
-          // String lockName = "${JOB_NAME}-${BUILD_NUMBER}"
-          // openshift.setLockName(lockName)
+          String lockName = "${JOB_NAME}-${BUILD_NUMBER}"
+          openshift.setLockName(lockName)
           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github', usernameVariable: 'githubUser', passwordVariable: 'githubPwd']]) {
             
             /* def gitUrl = sh returnStdout: true, script: 'git config remote.origin.url'
