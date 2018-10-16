@@ -59,7 +59,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject() {
-              openshift.apply("-f", "-l=app=time-service", "--dry-run=true", "./openshift")
+              openshift.apply("-l=app=time-service", "--dry-run=true", "-f ./openshift")
               //openshift.apply("-f", "-l=app=time-service", "--dry-run=true", "openshift")
             }
           }
