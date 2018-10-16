@@ -98,10 +98,11 @@ pipeline {
     stage('tag repo') {
       steps {
         script {
-          String lockName = "${JOB_NAME}-${BUILD_NUMBER}"
-          openshift.setLockName("${lockName}".toString())
+          // String lockName = "${JOB_NAME}-${BUILD_NUMBER}"
+          // openshift.setLockName(lockName)
           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github', usernameVariable: 'githubUser', passwordVariable: 'githubPwd']]) {
-            def gitUrl = sh returnStdout: true, script: 'git config remote.origin.url'
+            
+            /* def gitUrl = sh returnStdout: true, script: 'git config remote.origin.url'
             def fullGitUrl = ''
 
             def gitUrlMatcher = gitUrl =~ '(.+://)(.+)'
@@ -116,8 +117,10 @@ pipeline {
               fullGitUrl = "${gitProtocol}${githubUser}:${githubPwd}@${gitHostAndPath}"
             } else {
               error ("Unable to parse Git url ${gitUrl}")
-            }
+            } */
 
+            def fullGitUrl = "https://${githubUser}:${githubPwd}@github.com/torstenatgithub/time-service.git"
+            
             sh("git config user.name \"CI/CD pipeline\"")
             sh("git config user.email \"cicd@no.reply\"")
             sh("git add build-timestamp.txt")
