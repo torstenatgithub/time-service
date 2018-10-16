@@ -98,7 +98,7 @@ pipeline {
     stage('tag repo') {
       steps {
         script {
-          def lockName = "${JOB_NAME}-${BUILD_NUMBER}"
+          String lockName = "${JOB_NAME}-${BUILD_NUMBER}" as String
           openshift.setLockName(lockName)
           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github', usernameVariable: 'githubUser', passwordVariable: 'githubPwd']]) {
             
