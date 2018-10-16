@@ -79,23 +79,6 @@ pipeline {
       }
     }
     
-    stage('verify deployment') {
-      steps {
-        script {
-          openshift.withCluster() {
-            openshift.withProject() {
-              def latestDeploymentVersion = openshift.selector("dc", "time-service").object().status.latestVersion
-              def rc = openshift.selector("rc", "time-service-${latestDeploymentVersion}")
-              rc.untilEach(1) {
-                def rcMap = it.object()
-                return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
-              }
-            }
-          }
-        }
-      }
-    }
-    
     stage('tag image') {
       steps {
         script {
@@ -140,6 +123,23 @@ pipeline {
             sh("git commit -am \"Version ${VERSION}\"")
             sh("git tag -am \"Tag ${VERSION}\" ${VERSION}")
             sh("git push ${fullGitUrl} --tags --quiet")
+          }
+        }
+      }
+    }
+    
+    stage('verify deployment') {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject() {
+              def latestDeploymentVersion = openshift.selector("dc", "time-service").object().status.latestVersion
+              def rc = openshift.selector("rc", "time-service-${latestDeploymentVersion}")
+              rc.untilEach(1) {
+                def rcMap = it.object()
+                return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+              }
+            }
           }
         }
       }
