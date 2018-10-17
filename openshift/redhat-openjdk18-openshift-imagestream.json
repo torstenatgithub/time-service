@@ -14,9 +14,6 @@
                     "tags": "builder,java",
                     "supports":"java:8",
                     "version":"latest"
-                },
-                "referencePolicy": {
-                    "type": "Local"
                 }
             }
         ]
