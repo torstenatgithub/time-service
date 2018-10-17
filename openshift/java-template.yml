@@ -7,15 +7,13 @@ labels:
 message: A new java application has been created in your project.
 metadata:
   annotations:
-    description: An example Java application using OpenJDK 8. For more information
-      about using this template, see https://github.com/jboss-openshift/application-templates.
+    description: An example Java application using OpenJDK 8. For more information about using this template, see https://github.com/jboss-openshift/application-templates.
     iconClass: icon-rh-openjdk
     openshift.io/display-name: OpenJDK 8
     openshift.io/provider-display-name: Red Hat, Inc.
     tags: java
     template.openshift.io/documentation-url: https://access.redhat.com/documentation/en/
-    template.openshift.io/long-description: This template defines resources needed
-      to develop Red Hat OpenJDK Java 8 based application.
+    template.openshift.io/long-description: This template defines resources needed to develop Red Hat OpenJDK Java 8 based application.
     template.openshift.io/support-url: https://access.redhat.com
     version: 1.4.16
   name: openjdk18-web-basic-s2i
@@ -139,8 +137,7 @@ parameters:
   name: APPLICATION_NAME
   required: true
   value: openjdk-app
-- description: 'Custom hostname for http service route.  Leave blank for default hostname,
-    e.g.: <application-name>-<project>.<default-domain-suffix>'
+- description: 'Custom hostname for http service route.  Leave blank for default hostname, e.g.: <application-name>-<project>.<default-domain-suffix>'
   displayName: Custom http Route Hostname
   name: HOSTNAME_HTTP
   required: false
@@ -172,10 +169,7 @@ parameters:
   generate: expression
   name: GENERIC_WEBHOOK_SECRET
   required: true
-- description: Namespace in which the ImageStreams for Red Hat Middleware images are
-    installed. These ImageStreams are normally installed in the openshift namespace.
-    You should only need to modify this if you've installed the ImageStreams in a
-    different namespace/project.
+- description: Namespace in which the ImageStreams for Red Hat Middleware images are installed. These ImageStreams are normally installed in the openshift namespace. You should only need to modify this if you've installed the ImageStreams in a different namespace/project.
   displayName: ImageStream Namespace
   name: IMAGE_STREAM_NAMESPACE
   required: true
