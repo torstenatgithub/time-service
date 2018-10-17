@@ -1,4 +1,4 @@
-https://www.json2yaml.com/---
+---
 apiVersion: v1
 kind: ImageStream
 labels:
