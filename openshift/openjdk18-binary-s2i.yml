@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: openjdk18-web-basic-s2i
+  template: openjdk18-binary-s2i
   xpaas: 1.4.16
 message: A new java application has been created in your project.
 metadata:
   annotations:
-    description: An example Java application using OpenJDK 8. For more information about using this template, see https://github.com/jboss-openshift/application-templates.
+    description: Based on OpenJDK 8 template by Red Hat, modified for binary source. For more information about using this template, see https://github.com/jboss-openshift/application-templates.
     iconClass: icon-rh-openjdk
     openshift.io/display-name: OpenJDK 8
     openshift.io/provider-display-name: Red Hat, Inc.
@@ -16,7 +16,7 @@ metadata:
     template.openshift.io/long-description: This template defines resources needed to develop Red Hat OpenJDK Java 8 based application.
     template.openshift.io/support-url: https://access.redhat.com
     version: 1.4.16
-  name: openjdk18-web-basic-s2i
+  name: openjdk18-binary-s2i
 objects:
 - apiVersion: v1
   kind: Service
@@ -63,17 +63,13 @@ objects:
         kind: ImageStreamTag
         name: "${APPLICATION_NAME}:latest"
     source:
-      contextDir: "${CONTEXT_DIR}"
-      git:
-        ref: "${SOURCE_REPOSITORY_REF}"
-        uri: "${SOURCE_REPOSITORY_URL}"
-      type: Git
+      type: Binary
     strategy:
       sourceStrategy:
         forcePull: true
         from:
           kind: ImageStreamTag
-          name: java:8
+          name: redhat-openjdk18-openshift:1.5
           namespace: "${IMAGE_STREAM_NAMESPACE}"
       type: Source
     triggers:
