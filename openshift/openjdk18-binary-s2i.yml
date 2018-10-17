@@ -69,7 +69,7 @@ objects:
         forcePull: true
         from:
           kind: ImageStreamTag
-          name: redhat-openjdk18-openshift:1.5
+          name: "openjdk18-openshift:latest"
           namespace: "${IMAGE_STREAM_NAMESPACE}"
       type: Source
     triggers:
