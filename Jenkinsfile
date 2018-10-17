@@ -59,8 +59,9 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject() {
-              openshift.apply("-l=app=time-service", "--dry-run=true", "-f ./openshift")
-              openshift.apply("-l=app=time-service", "--dry-run=false", "-f ./openshift")
+              openshift.process("openjdk18-binary-s2i", "--param-file=openshift/template-parameters.txt")
+              //openshift.apply("-l=app=time-service", "--dry-run=true", "-f ./openshift")
+              //openshift.apply("-l=app=time-service", "--dry-run=false", "-f ./openshift")
             }
           }
         }
