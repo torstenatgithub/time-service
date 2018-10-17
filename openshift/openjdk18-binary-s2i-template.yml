@@ -138,21 +138,6 @@ parameters:
   name: HOSTNAME_HTTP
   required: false
   value: ''
-- description: Git source URI for application
-  displayName: Git Repository URL
-  name: SOURCE_REPOSITORY_URL
-  required: true
-  value: https://github.com/jboss-openshift/openshift-quickstarts
-- description: Git branch/tag reference
-  displayName: Git Reference
-  name: SOURCE_REPOSITORY_REF
-  required: false
-  value: master
-- description: Path within Git project to build; empty for root project directory.
-  displayName: Context Directory
-  name: CONTEXT_DIR
-  required: false
-  value: undertow-servlet
 - description: GitHub trigger secret
   displayName: Github Webhook Secret
   from: "[a-zA-Z0-9]{8}"
