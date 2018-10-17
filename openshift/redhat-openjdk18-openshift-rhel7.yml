@@ -24,8 +24,6 @@ spec:
       kind: DockerImage
       name: registry.redhat.io/redhat-openjdk-18/openjdk18-openshift:1.0
     name: '1.0'
-#    referencePolicy:
-#      type: Local
   - annotations:
       description: Build and run Java applications using Maven and OpenJDK 8.
       iconClass: icon-rh-openjdk
@@ -39,8 +37,6 @@ spec:
       kind: DockerImage
       name: registry.redhat.io/redhat-openjdk-18/openjdk18-openshift:1.1
     name: '1.1'
-#    referencePolicy:
-#      type: Local
   - annotations:
       description: Build and run Java applications using Maven and OpenJDK 8.
       iconClass: icon-rh-openjdk
@@ -54,8 +50,6 @@ spec:
       kind: DockerImage
       name: registry.redhat.io/redhat-openjdk-18/openjdk18-openshift:1.2
     name: '1.2'
-#    referencePolicy:
-#      type: Local
   - annotations:
       description: Build and run Java applications using Maven and OpenJDK 8.
       iconClass: icon-rh-openjdk
@@ -69,8 +63,6 @@ spec:
       kind: DockerImage
       name: registry.redhat.io/redhat-openjdk-18/openjdk18-openshift:1.3
     name: '1.3'
-#    referencePolicy:
-#      type: Local
   - annotations:
       description: Build and run Java applications using Maven and OpenJDK 8.
       iconClass: icon-rh-openjdk
@@ -84,8 +76,6 @@ spec:
       kind: DockerImage
       name: registry.redhat.io/redhat-openjdk-18/openjdk18-openshift:1.4
     name: '1.4'
-#    referencePolicy:
-#      type: Local
   - annotations:
       description: Build and run Java applications using Maven and OpenJDK 8.
       iconClass: icon-rh-openjdk
@@ -99,5 +89,3 @@ spec:
       kind: DockerImage
       name: registry.redhat.io/redhat-openjdk-18/openjdk18-openshift:1.5
     name: '1.5'
-#    referencePolicy:
-#      type: Local
