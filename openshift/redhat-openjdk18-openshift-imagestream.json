@@ -15,6 +15,9 @@
                     "supports":"java:8",
                     "version":"latest"
                 }
+                "referencePolicy": {
+                    "type": "Local"
+                }
             }
         ]
     }
