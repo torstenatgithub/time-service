@@ -106,21 +106,19 @@ pipeline {
                 def fullGitUrl = ''
                 //def fullGitUrl = "https://${githubUser}:${githubPwd}@github.com/torstenatgithub/time-service.git"
 
-                lock(inversePrecedence: true, resource: 'time-service-build') {
-                  def gitUrl = sh returnStdout: true, script: 'git config remote.origin.url'
-                  def gitUrlMatcher = gitUrl =~ '(.+://)(.+)'
+                def gitUrl = sh returnStdout: true, script: 'git config remote.origin.url'
+                def gitUrlMatcher = gitUrl =~ '(.+://)(.+)'
 
-                  if (gitUrlMatcher) {
-                    def gitProtocol = gitUrlMatcher[0][1]
-                    def gitHostAndPath = gitUrlMatcher[0][2]
-                    def gitUrlMatcher2 = gitHostAndPath =~ '@(.+)'
-                    if (gitUrlMatcher2) {
-                      gitHostAndPath = gitUrlMatcher2[0][1]
-                    }
-                    fullGitUrl = "${gitProtocol}${githubUser}:${githubPwd}@${gitHostAndPath}"
-                  } else {
-                    error ("Unable to parse Git url ${gitUrl}")
+                if (gitUrlMatcher) {
+                  def gitProtocol = gitUrlMatcher[0][1]
+                  def gitHostAndPath = gitUrlMatcher[0][2]
+                  def gitUrlMatcher2 = gitHostAndPath =~ '@(.+)'
+                  if (gitUrlMatcher2) {
+                    gitHostAndPath = gitUrlMatcher2[0][1]
                   }
+                  fullGitUrl = "${gitProtocol}${githubUser}:${githubPwd}@${gitHostAndPath}"
+                } else {
+                  error ("Unable to parse Git url ${gitUrl}")
                 }
 
                 sh("git config user.name \"CI/CD pipeline\"")
