@@ -31,7 +31,7 @@ objects:
           protocol: TCP
           targetPort: 8080
       selector: 
-        deploymentConfig: "${APPLICATION_NAME}"
+        deploymentconfig: "${APPLICATION_NAME}"
       sessionAffinity: None
       type: ClusterIP
   - apiVersion: v1
@@ -92,14 +92,14 @@ objects:
     spec: 
       replicas: 1
       selector: 
-        deploymentConfig: "${APPLICATION_NAME}"
+        deploymentconfig: "${APPLICATION_NAME}"
       strategy: 
         type: Rolling
       template: 
         metadata: 
           labels: 
             application: "${APPLICATION_NAME}"
-            deploymentConfig: "${APPLICATION_NAME}"
+            deploymentconfig: "${APPLICATION_NAME}"
             name: "${APPLICATION_NAME}"
           name: "${APPLICATION_NAME}"
         spec: 
