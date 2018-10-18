@@ -60,9 +60,7 @@ pipeline {
           openshift.withCluster() {
             openshift.withProject() {
               def models = openshift.process("openjdk18-binary-s2i", "--param-file=openshift/template-parameters.txt")
-              echo "Applying this template will create or modify ${models.size()} objects"
               def created = openshift.apply(models)
-              echo "The template created/modified: ${models.names()}"
               //openshift.apply("-l=app=time-service", "--dry-run=true", "-f ./openshift")
               //openshift.apply("-l=app=time-service", "--dry-run=false", "-f ./openshift")
             }
