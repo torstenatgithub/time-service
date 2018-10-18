@@ -1,61 +1,62 @@
----
 apiVersion: v1
 kind: Template
 labels:
-  template: openjdk18-binary-s2i
-  xpaas: 1.4.16
+  template: ergo-openjdk18-binary-s2i
+  application: "${APPLICATION_NAME}"
 message: A new java application has been created in your project.
 metadata:
   annotations:
-    description: Based on OpenJDK 8 template by Red Hat, modified for binary source. For more information about using this template, see https://github.com/jboss-openshift/application-templates.
-    iconClass: icon-rh-openjdk
+    description: >-
+      Based on the OpenJDK 8 template by Red Hat, modified for binary source.
+      For more information about using this template, see https://github.com/jboss-openshift/application-templates.
+    iconClass: icon-openjdk
     openshift.io/display-name: OpenJDK 8
-    openshift.io/provider-display-name: Red Hat, Inc.
-    tags: java
+    openshift.io/provider-display-name: ERGO
+    tags: "java,ergo"
     template.openshift.io/documentation-url: https://access.redhat.com/documentation/en/
-    template.openshift.io/long-description: This template defines resources needed to develop Red Hat OpenJDK Java 8 based application.
+    template.openshift.io/long-description: This template defines resources needed to develop OpenJDK Java 8 based applications.
     template.openshift.io/support-url: https://access.redhat.com
-    version: 1.4.16
-  name: openjdk18-binary-s2i
+    version: 1.0
+  name: ergo-openjdk18-binary-s2i
 objects:
 - apiVersion: v1
   kind: Service
   metadata:
     annotations:
       description: The application's http port.
-    labels:
-      application: "${APPLICATION_NAME}"
     name: "${APPLICATION_NAME}"
   spec:
     ports:
     - port: 8080
       targetPort: 8080
+      protocol: TCP
+      name: 8080-tcp
     selector:
       deploymentConfig: "${APPLICATION_NAME}"
+    sessionAffinity: None
+    type: ClusterIP
 - apiVersion: v1
-  id: "${APPLICATION_NAME}-http"
   kind: Route
   metadata:
     annotations:
       description: Route for application's http service.
-    labels:
-      application: "${APPLICATION_NAME}"
     name: "${APPLICATION_NAME}"
   spec:
     host: "${HOSTNAME_HTTP}"
     to:
+      kind: Service
       name: "${APPLICATION_NAME}"
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    labels:
-      application: "${APPLICATION_NAME}"
+    annotations:
+      description: Target ImageStream for the application's build.
     name: "${APPLICATION_NAME}"
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    labels:
-      application: "${APPLICATION_NAME}"
+    annotations:
+      description: BuildConfig for the application.
     name: "${APPLICATION_NAME}"
   spec:
     output:
@@ -70,8 +71,9 @@ objects:
         from:
           kind: ImageStreamTag
           name: "openjdk18-openshift:latest"
-          namespace: "${IMAGE_STREAM_NAMESPACE}"
+          namespace: "${SOURCE_IMAGE_STREAM_NAMESPACE}"
       type: Source
+    runPolicy: Serial
     triggers:
     - github:
         secret: "${GITHUB_WEBHOOK_SECRET}"
@@ -85,18 +87,19 @@ objects:
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
-    labels:
-      application: "${APPLICATION_NAME}"
+    annotations:
+      description: DeploymentConfig for the application.
     name: "${APPLICATION_NAME}"
   spec:
     replicas: 1
     selector:
       deploymentConfig: "${APPLICATION_NAME}"
     strategy:
-      type: Recreate
+      type: Rolling
     template:
       metadata:
         labels:
+          name: "${APPLICATION_NAME}"
           application: "${APPLICATION_NAME}"
           deploymentConfig: "${APPLICATION_NAME}"
         name: "${APPLICATION_NAME}"
@@ -107,15 +110,9 @@ objects:
           imagePullPolicy: Always
           name: "${APPLICATION_NAME}"
           ports:
-          - containerPort: 8778
-            name: jolokia
-            protocol: TCP
           - containerPort: 8080
+            protocol: TCP
             name: http
-            protocol: TCP
-          - containerPort: 8443
-            name: https
-            protocol: TCP
         terminationGracePeriodSeconds: 75
     triggers:
     - imageChangeParams:
@@ -133,25 +130,30 @@ parameters:
   name: APPLICATION_NAME
   required: true
   value: openjdk-app
-- description: 'Custom hostname for http service route.  Leave blank for default hostname, e.g.: <application-name>-<project>.<default-domain-suffix>'
+- description: >-
+    Custom hostname for http service route.
+    Leave blank for default hostname, e.g. <application-name>-<project>.<default-domain-suffix>
   displayName: Custom http Route Hostname
   name: HOSTNAME_HTTP
   required: false
   value: ''
-- description: GitHub trigger secret
+- description: GitHub trigger secret.
   displayName: Github Webhook Secret
-  from: "[a-zA-Z0-9]{8}"
+  from: "[a-zA-Z0-9]{12}"
   generate: expression
   name: GITHUB_WEBHOOK_SECRET
   required: true
-- description: Generic build trigger secret
+- description: Generic build trigger secret.
   displayName: Generic Webhook Secret
-  from: "[a-zA-Z0-9]{8}"
+  from: "[a-zA-Z0-9]{12}"
   generate: expression
   name: GENERIC_WEBHOOK_SECRET
   required: true
-- description: Namespace in which the ImageStreams for Red Hat Middleware images are installed. These ImageStreams are normally installed in the openshift namespace. You should only need to modify this if you've installed the ImageStreams in a different namespace/project.
+- description: >-
+    Namespace in which the ImageStreams for builder images are installed.
+    These ImageStreams are normally installed in the openshift namespace.
+    You should only need to modify this if you've installed the ImageStreams in a different namespace/project.
   displayName: ImageStream Namespace
-  name: IMAGE_STREAM_NAMESPACE
+  name: SOURCE_IMAGE_STREAM_NAMESPACE
   required: true
   value: openshift
