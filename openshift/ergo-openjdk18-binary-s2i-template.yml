@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 labels: 
-  application: "${APPLICATION_NAME}"
+  app: "${APPLICATION_NAME}"
   template: ergo-openjdk18-binary-s2i
 message: "A new java application has been created in your project."
 metadata: 
@@ -98,7 +98,7 @@ objects:
       template: 
         metadata: 
           labels: 
-            application: "${APPLICATION_NAME}"
+            app: "${APPLICATION_NAME}"
             deploymentconfig: "${APPLICATION_NAME}"
             name: "${APPLICATION_NAME}"
           name: "${APPLICATION_NAME}"
