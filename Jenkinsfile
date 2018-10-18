@@ -102,26 +102,27 @@ pipeline {
           steps {
             script {
               withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github', usernameVariable: 'githubUser', passwordVariable: 'githubPwd']]) {
-                
-                /* def gitUrl = sh returnStdout: true, script: 'git config remote.origin.url'
+
                 def fullGitUrl = ''
+                //def fullGitUrl = "https://${githubUser}:${githubPwd}@github.com/torstenatgithub/time-service.git"
 
-                def gitUrlMatcher = gitUrl =~ '(.+://)(.+)'
+                lock(inversePrecedence: true, resource: 'time-service-build') {
+                  def gitUrl = sh returnStdout: true, script: 'git config remote.origin.url'
+                  def gitUrlMatcher = gitUrl =~ '(.+://)(.+)'
 
-                if (gitUrlMatcher) {
-                  def gitProtocol = gitUrlMatcher[0][1]
-                  def gitHostAndPath = gitUrlMatcher[0][2]
-                  def gitUrlMatcher2 = gitHostAndPath =~ '@(.+)'
-                  if (gitUrlMatcher2) {
-                    gitHostAndPath = gitUrlMatcher2[0][1]
+                  if (gitUrlMatcher) {
+                    def gitProtocol = gitUrlMatcher[0][1]
+                    def gitHostAndPath = gitUrlMatcher[0][2]
+                    def gitUrlMatcher2 = gitHostAndPath =~ '@(.+)'
+                    if (gitUrlMatcher2) {
+                      gitHostAndPath = gitUrlMatcher2[0][1]
+                    }
+                    fullGitUrl = "${gitProtocol}${githubUser}:${githubPwd}@${gitHostAndPath}"
+                  } else {
+                    error ("Unable to parse Git url ${gitUrl}")
                   }
-                  fullGitUrl = "${gitProtocol}${githubUser}:${githubPwd}@${gitHostAndPath}"
-                } else {
-                  error ("Unable to parse Git url ${gitUrl}")
-                } */
+                }
 
-                def fullGitUrl = "https://${githubUser}:${githubPwd}@github.com/torstenatgithub/time-service.git"
-                
                 sh("git config user.name \"CI/CD pipeline\"")
                 sh("git config user.email \"cicd@no.reply\"")
                 sh("git add build-timestamp.txt")
