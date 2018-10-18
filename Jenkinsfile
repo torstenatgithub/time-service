@@ -15,8 +15,8 @@ pipeline {
     stage('preamble') {
       steps {
         script {
-          //String lockName = "${JOB_NAME}-${BUILD_NUMBER}" as String
-          //openshift.setLockName(lockName)
+          String lockName = "${JOB_NAME}-${BUILD_NUMBER}" as String
+          openshift.setLockName(lockName)
 
           openshift.withCluster() {
             openshift.withProject() {
