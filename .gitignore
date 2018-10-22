@@ -4,7 +4,7 @@
 ### Eclipse ###
 
 .metadata
-bin/
+#bin/
 tmp/
 *.tmp
 *.bak
@@ -119,4 +119,3 @@ gradle-app.setting
 
 # End of https://www.gitignore.io/api/java,gradle,eclipse,visualstudiocode
 
-!openshift/ergo-openjdk18-binary-s2i/s2i/bin/*

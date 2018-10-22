@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ImageStream
+metadata:
+  name: ergo-openjdk18-binary
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+  - annotations:
+      description: Run Java applications using OpenJDK 8.
+      supports: java:8
+      tags: builder,java,openjdk
+      version: latest
+    from:
+      kind: DockerImage
+      name: docker.io/torstenatdocker/ergo-openjdk18-binary:latest
+    name: latest
