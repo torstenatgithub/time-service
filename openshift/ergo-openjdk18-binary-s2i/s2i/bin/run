@@ -1,0 +1,19 @@
+#!/bin/bash -e
+#
+# S2I run script for the 'ergo-openjdk18-binary' image.
+# The run script executes the server that runs your application.
+#
+# For more information see the documentation:
+#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
+
+if [ `ls -1 *.jar 2>/dev/null | wc -l ` -gt 1 ];
+then
+    echo "More than one JAR file found."
+elif [ `ls -1 *.jar 2>/dev/null | wc -l ` -eq 0 ];
+then
+    echo "No JAR file found."
+else
+    JARFILE="$(ls *.jar)"
+    exec java -Xmx1024m -Xms256m -jar ${JARFILE}
+fi
