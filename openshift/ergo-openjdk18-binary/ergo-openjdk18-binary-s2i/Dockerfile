@@ -2,7 +2,7 @@
 FROM openshift/base-centos7
 
 # TODO: Put the maintainer name in the image metadata
-# LABEL maintainer="Torsten Kramer <torsten.kramer@nowhere.org>"
+LABEL maintainer="Torsten Kramer <torsten.kramer@nowhere.org>"
 
 # TODO: Rename the builder environment variable to inform users about application you provide them
 ENV OPENJDK_VERSION 1.8
