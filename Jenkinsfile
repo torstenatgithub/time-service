@@ -15,8 +15,8 @@ pipeline {
     stage('preamble') {
       steps {
         script {
-          String lockName = "${JOB_NAME}-${BUILD_NUMBER}" as String
-          openshift.setLockName(lockName)
+          //String lockName = "${JOB_NAME}-${BUILD_NUMBER}" as String
+          //openshift.setLockName(lockName)
 
           openshift.withCluster() {
             openshift.withProject() {
@@ -85,65 +85,73 @@ pipeline {
     }
     
     stage('epilogue') {
-      parallel {
-        stage('tag image') {
-          steps {
-            script {
-              openshift.withCluster() {
-                openshift.withProject() {
-                  openshift.tag("${openshift.project()}/time-service:latest", "${openshift.project()}/time-service:${VERSION}")
-                }
-              }
-            }
-          }
-        }
-
-        stage('tag repo') {
-          steps {
-            script {
-              withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github', usernameVariable: 'githubUser', passwordVariable: 'githubPwd']]) {
-
-                def fullGitUrl = ''
-                //def fullGitUrl = "https://${githubUser}:${githubPwd}@github.com/torstenatgithub/time-service.git"
-
-                lock(inversePrecedence: true, resource: 'time-service-regex') {
-                  def gitUrl = sh returnStdout: true, script: 'git config remote.origin.url'
-                  def gitUrlMatcher = gitUrl =~ '(.+://)(.+)'
-
-                  if (gitUrlMatcher) {
-                    def gitProtocol = gitUrlMatcher[0][1]
-                    def gitHostAndPath = gitUrlMatcher[0][2]
-                    def gitUrlMatcher2 = gitHostAndPath =~ '@(.+)'
-                    if (gitUrlMatcher2) {
-                      gitHostAndPath = gitUrlMatcher2[0][1]
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject() {
+              parallel {
+                stage('tag image') {
+                  steps {
+                    script {
+                      openshift.withCluster() {
+                        openshift.withProject() {
+                          openshift.tag("${openshift.project()}/time-service:latest", "${openshift.project()}/time-service:${VERSION}")
+                        }
+                      }
                     }
-                    fullGitUrl = "${gitProtocol}${githubUser}:${githubPwd}@${gitHostAndPath}"
-                  } else {
-                    error ("Unable to parse Git url ${gitUrl}")
                   }
                 }
 
-                sh("git config user.name \"CI/CD pipeline\"")
-                sh("git config user.email \"cicd@no.reply\"")
-                sh("git add build-timestamp.txt")
-                sh("git commit -am \"Version ${VERSION}\"")
-                sh("git tag -am \"Tag ${VERSION}\" ${VERSION}")
-                sh("git push ${fullGitUrl} --tags --quiet")
-              }
-            }
-          }
-        }
+                stage('tag repo') {
+                  steps {
+                    script {
+                      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github', usernameVariable: 'githubUser', passwordVariable: 'githubPwd']]) {
 
-        stage('verify deployment') {
-          steps {
-            script {
-              openshift.withCluster() {
-                openshift.withProject() {
-                  def latestDeploymentVersion = openshift.selector("dc", "time-service").object().status.latestVersion
-                  def rc = openshift.selector("rc", "time-service-${latestDeploymentVersion}")
-                  rc.untilEach(1) {
-                    def rcMap = it.object()
-                    return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                        def fullGitUrl = ''
+                        //def fullGitUrl = "https://${githubUser}:${githubPwd}@github.com/torstenatgithub/time-service.git"
+
+                        lock(inversePrecedence: true, resource: "${JOB_NAME}-${BUILD_NUMBER}-REGEX") {
+                          def gitUrl = sh returnStdout: true, script: 'git config remote.origin.url'
+                          def gitUrlMatcher = gitUrl =~ '(.+://)(.+)'
+
+                          if (gitUrlMatcher) {
+                            def gitProtocol = gitUrlMatcher[0][1]
+                            def gitHostAndPath = gitUrlMatcher[0][2]
+                            def gitUrlMatcher2 = gitHostAndPath =~ '@(.+)'
+                            if (gitUrlMatcher2) {
+                              gitHostAndPath = gitUrlMatcher2[0][1]
+                            }
+                            fullGitUrl = "${gitProtocol}${githubUser}:${githubPwd}@${gitHostAndPath}"
+                          } else {
+                            error ("Unable to parse Git url ${gitUrl}")
+                          }
+                        }
+
+                        sh("git config user.name \"CI/CD pipeline\"")
+                        sh("git config user.email \"cicd@no.reply\"")
+                        sh("git add build-timestamp.txt")
+                        sh("git commit -am \"Version ${VERSION}\"")
+                        sh("git tag -am \"Tag ${VERSION}\" ${VERSION}")
+                        sh("git push ${fullGitUrl} --tags --quiet")
+                      }
+                    }
+                  }
+                }
+
+                stage('verify deployment') {
+                  steps {
+                    script {
+                      openshift.withCluster() {
+                        openshift.withProject() {
+                          def latestDeploymentVersion = openshift.selector("dc", "time-service").object().status.latestVersion
+                          def rc = openshift.selector("rc", "time-service-${latestDeploymentVersion}")
+                          rc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
