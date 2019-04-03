@@ -53,6 +53,8 @@ objects:
       name: "${APPLICATION_NAME}"
     spec:
       dockerImageRepository: "docker.io/torstenatdocker/${APPLICATION_NAME}"
+    status:
+      dockerImageRepository: "docker.io/torstenatdocker/${APPLICATION_NAME}"
   - apiVersion: v1
     kind: BuildConfig
     metadata: 
