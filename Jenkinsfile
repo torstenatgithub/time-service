@@ -26,7 +26,7 @@ pipeline {
               VERSION = readFile 'build-timestamp.txt'
               
               echo "Building version: ${VERSION}"
-              echo sh(returnStdout: true, sc192.168.99.100ript: 'env')
+              echo sh(returnStdout: true, script: 'env')
             }
           }
         }
