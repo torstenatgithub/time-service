@@ -88,14 +88,11 @@ pipeline {
       parallel {
         stage('tag image') {
           steps {
-            /*script {
+            script {
               openshift.withCluster() {
                 openshift.withProject() {
                   openshift.tag("${openshift.project()}/time-service:latest", "${openshift.project()}/time-service:${VERSION}")
                 }
-              }*/
-              docker.withRegistry('', 'dockerhub') {
-                sh("docker tag torstenatdocker/time-service:latest torstenatdocker/time-service:${VERSION}")
               }
             }
           }
