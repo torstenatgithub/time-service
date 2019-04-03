@@ -52,12 +52,12 @@ objects:
         description: "Target ImageStream for the application's build."
       name: "${APPLICATION_NAME}"
     spec:
-      dockerImageRepository: "docker.io/torstenatdocker/${APPLICATION_NAME}"
+      dockerImageRepository: "https://index.docker.io/v1/torstenatdocker/${APPLICATION_NAME}"
       tags:
         - name: latest
           from:
             kind: DockerImage
-            name: "docker.io/torstenatdocker/${APPLICATION_NAME}"
+            name: "index.docker.io/v1/torstenatdocker/${APPLICATION_NAME}"
   - apiVersion: v1
     kind: BuildConfig
     metadata: 
