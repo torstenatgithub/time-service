@@ -95,9 +95,9 @@ pipeline {
                 }
               }*/
               docker.withRegistry("", 'dockerhub') {
-                ssh """"
+                ssh """
                   docker tag torstenatdocker/time-service:latest torstenatdocker/time-service:${VERSION}
-                """"
+                """
               }
             }
           }
