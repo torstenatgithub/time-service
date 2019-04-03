@@ -26,7 +26,7 @@ pipeline {
               VERSION = readFile 'build-timestamp.txt'
               
               echo "Building version: ${VERSION}"
-              echo sh(returnStdout: true, script: 'env')
+              echo sh(returnStdout: true, sc192.168.99.100ript: 'env')
             }
           }
         }
@@ -88,11 +88,16 @@ pipeline {
       parallel {
         stage('tag image') {
           steps {
-            script {
+            /*script {
               openshift.withCluster() {
                 openshift.withProject() {
                   openshift.tag("${openshift.project()}/time-service:latest", "${openshift.project()}/time-service:${VERSION}")
                 }
+              }*/
+              docker.withRegistry("", 'dockerhub') {
+                ssh """"
+                  docker tag torstenatdocker/time-service:latest torstenatdocker/time-service:${VERSION}
+                """"
               }
             }
           }
