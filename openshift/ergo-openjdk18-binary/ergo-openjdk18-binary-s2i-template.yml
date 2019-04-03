@@ -62,9 +62,8 @@ objects:
     spec: 
       output: 
         to: 
-          kind: DockerImage
-          name: "docker.io/torstenatdocker/${APPLICATION_NAME}:latest"
-        pushSecret: dockerhub
+          kind: ImageStreamTag
+          name: "${APPLICATION_NAME}:latest"
       runPolicy: Serial
       source: 
         type: Binary
