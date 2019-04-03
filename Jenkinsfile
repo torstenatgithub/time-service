@@ -49,13 +49,13 @@ pipeline {
       }
     }
 
-    stage('unittest') {
+    /* stage('unittest') {
       steps {
         script {
           sh "./gradlew test"
         }
       }
-    }
+    } */
 
     stage('update os artefacts') {
       steps {
