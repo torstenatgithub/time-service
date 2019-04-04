@@ -110,7 +110,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject() {
-              openshift.raw("import-image time-service --from=docker.io/torstenatdocker/time-service --all")
+              openshift.raw("import-image time-service --from=docker.io/torstenatdocker/time-service --all --confirm")
             }
           }
         }
