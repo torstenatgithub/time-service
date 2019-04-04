@@ -72,7 +72,7 @@ pipeline {
       }
     }
 
-    stage('os build & deployment') {
+    stage('os build') {
       steps {
         script {
           openshift.withCluster() {
@@ -84,20 +84,49 @@ pipeline {
       }
     }
     
-    stage('epilogue') {
-      parallel {
-        stage('tag image') {
-          steps {
-            script {
-              openshift.withCluster() {
-                openshift.withProject() {
-                  openshift.tag("${openshift.project()}/time-service:latest", "${openshift.project()}/time-service:${VERSION}")
-                }
-              }
-            }
+    stage('docker tag') {
+      steps {
+        script {
+          //openshift.withCluster() {
+          //  openshift.withProject() {
+          //    openshift.tag("${openshift.project()}/time-service:latest", "${openshift.project()}/time-service:${VERSION}")
+          //  }
+
+          docker.withRegistry("", 'dockerhub') {
+            sh("docker pull torstenatdocker/time-service:latest")
+            sh("docker tag torstenatdocker/time-service:latest torstenatdocker/time-service:${VERSION}")
+            sh("docker push torstenatdocker/time-service:${VERSION}")
+            sh("docker rmi torstenatdocker/time-service:latest")
+            sh("docker rmi torstenatdocker/time-service:${VERSION}")
           }
         }
+      }
+    }
 
+    stage('update imagestream') {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject() {
+              openshift.raw("import-image time-service --from=docker.io/torstenatdocker/time-service --all")
+          }
+        }
+      }
+    }
+
+    stage('os deploy') {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject() {
+              openshift.raw("oc rollout latest dc/time-service")
+          }
+        }
+      }
+    }
+
+    stage('epilogue') {
+      parallel {
         stage('tag repo') {
           steps {
             script {

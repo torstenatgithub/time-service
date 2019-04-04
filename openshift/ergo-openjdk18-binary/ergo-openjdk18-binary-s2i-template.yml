@@ -51,15 +51,6 @@ objects:
       annotations: 
         description: "Target ImageStream for the application's build."
       name: "${APPLICATION_NAME}"
-    spec:
-      dockerImageRepository: "docker.io/torstenatdocker/${APPLICATION_NAME}"
-      lookupPolicy:
-        local: false
-      tags:
-        - name: latest
-          from:
-            kind: DockerImage
-            name: "docker.io/torstenatdocker/${APPLICATION_NAME}"
   - apiVersion: v1
     kind: BuildConfig
     metadata: 
@@ -116,7 +107,7 @@ objects:
         spec: 
           containers: 
             - env: []
-              image: "${APPLICATION_NAME}"
+              image: "${APPLICATION_NAME}:latest"
               imagePullPolicy: Always
               name: "${APPLICATION_NAME}"
               ports: 
@@ -124,16 +115,6 @@ objects:
                   name: http
                   protocol: TCP
           terminationGracePeriodSeconds: 75
-      triggers: 
-        - imageChangeParams: 
-            automatic: true
-            containerNames: 
-              - "${APPLICATION_NAME}"
-            from: 
-              kind: ImageStreamTag
-              name: "${APPLICATION_NAME}:latest"
-          type: ImageChange
-        - type: ConfigChange
 parameters: 
   - description: "The name for the application."
     displayName: "Application Name"
