@@ -52,14 +52,14 @@ objects:
         description: "Target ImageStream for the application's build."
       name: "${APPLICATION_NAME}"
     spec:
-      dockerImageRepository: "torstenatdocker/${APPLICATION_NAME}"
+      dockerImageRepository: "index.docker.io/v1/torstenatdocker/${APPLICATION_NAME}"
       lookupPolicy:
         local: false
       tags:
         - name: latest
           from:
             kind: DockerImage
-            name: "torstenatdocker/${APPLICATION_NAME}"
+            name: "index.docker.io/v1/torstenatdocker/${APPLICATION_NAME}"
   - apiVersion: v1
     kind: BuildConfig
     metadata: 
@@ -70,7 +70,7 @@ objects:
       output: 
         to: 
           kind: DockerImage
-          name: "torstenatdocker/${APPLICATION_NAME}:latest"
+          name: "index.docker.io/v1/torstenatdocker/${APPLICATION_NAME}:latest"
         pushSecret:
           name: dockerhub
       runPolicy: Serial
