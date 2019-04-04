@@ -71,6 +71,8 @@ objects:
         to: 
           kind: DockerImage
           name: "torstenatdocker/${APPLICATION_NAME}:latest"
+        pushSecret:
+          name: dockerhub
       runPolicy: Serial
       source: 
         type: Binary
