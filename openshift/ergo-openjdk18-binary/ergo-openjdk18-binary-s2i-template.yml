@@ -53,6 +53,8 @@ objects:
       name: "${APPLICATION_NAME}"
     spec:
       dockerImageRepository: "index.docker.io/v1/torstenatdocker/${APPLICATION_NAME}"
+      lookupPolicy:
+        local: false
       tags:
         - name: latest
           from:
