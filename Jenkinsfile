@@ -85,9 +85,6 @@ pipeline {
     }
     
     stage('docker tag') {
-      agent {
-        docker { image 'docker:17.06.0-ce' }
-      }
       steps {
         script {
           //openshift.withCluster() {
@@ -95,13 +92,15 @@ pipeline {
           //    openshift.tag("${openshift.project()}/time-service:latest", "${openshift.project()}/time-service:${VERSION}")
           //  }
 
-          docker.withRegistry("", 'dockerhub') {
-            sh("docker pull torstenatdocker/time-service:latest")
-            sh("docker tag torstenatdocker/time-service:latest torstenatdocker/time-service:${VERSION}")
-            sh("docker push torstenatdocker/time-service:${VERSION}")
-            sh("docker rmi torstenatdocker/time-service:latest")
-            sh("docker rmi torstenatdocker/time-service:${VERSION}")
-          }
+          //docker.withRegistry("", 'dockerhub') {
+          //  sh("docker pull torstenatdocker/time-service:latest")
+          //  sh("docker tag torstenatdocker/time-service:latest torstenatdocker/time-service:${VERSION}")
+          //  sh("docker push torstenatdocker/time-service:${VERSION}")
+          //  sh("docker rmi torstenatdocker/time-service:latest")
+          //  sh("docker rmi torstenatdocker/time-service:${VERSION}")
+          //}
+
+          input message: "Continue"
         }
       }
     }
