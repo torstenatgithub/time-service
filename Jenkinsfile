@@ -15,7 +15,7 @@ pipeline {
     stage('preamble') {
       steps {
         script {
-          String lockName = "${JOB_NAME}-${BUILD_NUMBER}" as String
+          String lockName = "${JOB_NAME}" as String
           openshift.setLockName(lockName)
 
           openshift.withCluster() {
@@ -85,6 +85,9 @@ pipeline {
     }
     
     stage('docker tag') {
+      agent {
+        docker { image 'docker:17.06.0-ce' }
+      }
       steps {
         script {
           //openshift.withCluster() {
