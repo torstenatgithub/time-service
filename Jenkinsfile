@@ -122,7 +122,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject() {
-              openshift.raw("oc rollout latest dc/time-service")
+              openshift.raw("rollout latest dc/time-service")
             }
           }
         }
