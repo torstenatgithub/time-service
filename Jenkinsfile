@@ -64,8 +64,6 @@ pipeline {
             openshift.withProject() {
               def models = openshift.process("openshift//ergo-openjdk18-binary-s2i", "--param-file=openshift/template-parameters.txt")
               def created = openshift.apply(models)
-              //openshift.apply("-l=app=time-service", "--dry-run=true", "-f ./openshift")
-              //openshift.apply("-l=app=time-service", "--dry-run=false", "-f ./openshift")
             }
           }
         }
@@ -85,6 +83,13 @@ pipeline {
     }
     
     stage('docker tag') {
+      agent {
+        docker {
+          label 'docker'
+          image 'docker:17.09.1-ce'
+          args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+      }
       steps {
         script {
           //openshift.withCluster() {
@@ -92,19 +97,18 @@ pipeline {
           //    openshift.tag("${openshift.project()}/time-service:latest", "${openshift.project()}/time-service:${VERSION}")
           //  }
 
-          //docker.withRegistry("", 'dockerhub') {
-          //  sh("docker pull torstenatdocker/time-service:latest")
-          //  sh("docker tag torstenatdocker/time-service:latest torstenatdocker/time-service:${VERSION}")
-          //  sh("docker push torstenatdocker/time-service:${VERSION}")
-          //  sh("docker rmi torstenatdocker/time-service:latest")
-          //  sh("docker rmi torstenatdocker/time-service:${VERSION}")
-          //}
-
-          input message: "Continue"
+          docker.withRegistry("", 'dockerhub') {
+            sh("docker pull torstenatdocker/time-service:latest")
+            sh("docker tag torstenatdocker/time-service:latest torstenatdocker/time-service:${VERSION}")
+            sh("docker push torstenatdocker/time-service:${VERSION}")
+            sh("docker rmi torstenatdocker/time-service:latest")
+            sh("docker rmi torstenatdocker/time-service:${VERSION}")
+          }
         }
       }
     }
 
+/*
     stage('update imagestream') {
       steps {
         script {
@@ -185,5 +189,6 @@ pipeline {
         }
       }
     }
+*/
   }
 }

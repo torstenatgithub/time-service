@@ -51,6 +51,10 @@ objects:
       annotations: 
         description: "Target ImageStream for the application's build."
       name: "${APPLICATION_NAME}"
+    spec:
+      lookupPolicy:
+        local: false
+      dockerImageRepository: "docker.io/torstenatdocker/${APPLICATION_NAME}"
   - apiVersion: v1
     kind: BuildConfig
     metadata: 
