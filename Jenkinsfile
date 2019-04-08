@@ -85,7 +85,6 @@ pipeline {
     stage('docker tag') {
       agent {
         docker {
-          label 'docker'
           image 'docker:17.09.1-ce'
           args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
